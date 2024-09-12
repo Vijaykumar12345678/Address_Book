@@ -3,7 +3,7 @@
 @Date: 2024-09-12
 @Last Modified by: Vijay Kumar M N
 @Last Modified: 2024-09-12
-@Title : python program for the AddressBook to able to edit  the contacts.
+@Title : python program for the AddressBook to able to delete the contacts.
 """
 from MyLogging import logger_init
 import re
@@ -90,11 +90,11 @@ class AddressBook:
         if key not in self.contacts:
             self.contacts[key]=contact
             print("Contact Added Successfully")
-            logger_init("UC_3").info(f"Contact Added  Successfully:")
+            logger_init("UC_4").info(f"Contact Added  Successfully:")
 
         else:
             print("Contact already exists")
-            logger_init("UC_3").info(f"Contact already Exists:")
+            logger_init("UC_4").info(f"Contact already Exists:")
     
     
     def edit_contact(self, first_name, last_name):
@@ -131,12 +131,33 @@ class AddressBook:
                 Phone_Number=Phone_Number if Phone_Number else None,
                 Email=Email if Email else None
             )
-            logger_init("UC_3").info(f"Contact edited successfully: {key}")
+            logger_init("UC_4").info(f"Contact edited successfully: {key}")
             return f"Contact {key} edited successfully."
         else:
-            logger_init("UC_3").info(f"Contact {key} not found.")
+            logger_init("UC_4").info(f"Contact {key} not found.")
             return f"Contact for {key} not found."
+    
+    def delete_contact(self,First_Name,Last_Name):
+        
+        """
+        Description:
+            This function is used to delete the contact based on the first name and last name.
 
+        Parameters:
+            First_Name : str First name of the contact to delete.
+            Last_Name : str Last name of the contact to delete
+        
+        Returns:
+            str: 
+        """
+        key=f"{First_Name} {Last_Name}"
+        if key in self.contacts:
+            del self.contacts[key]
+            logger_init("UC_4").info(f"Contact deleted successfully: {key}")
+            return f"Contact Deleted Succesfully"
+        else:
+            logger_init("UC_4").info(f"Contact {key} not found.")
+            return f"Not exist"
     
     def get_valid_zip_code(self, zip_code_input):
         
@@ -238,6 +259,7 @@ def main():
         print('\n 1. Add new Contact:')
         print("\n 2. Display contacts")
         print("\n 3. Edit Contact")
+        print("\n 4. Delete Contact")
 
         choice=int(input("Enter the choice:"))
         if choice==1:    
@@ -270,6 +292,11 @@ def main():
             First_Name=input("Enter the First Name:")
             Last_Name=input("Enter the Last Name:")
             result=address_book.edit_contact(First_Name,Last_Name)
+            print(result)
+        elif choice==4:
+            First_Name=input("Enter the First Name:")
+            Last_Name=input("Enter the Last Name")
+            result=address_book.delete_contact(First_Name,Last_Name)
             print(result)
         else:
             break
