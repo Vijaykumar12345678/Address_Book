@@ -3,7 +3,7 @@
 @Date: 2024-09-13
 @Last Modified by: Vijay Kumar M N
 @Last Modified: 2024-09-13
-@Title : Python program for managing multiple Address Books no duplicate names.
+@Title : Python program for to search a person based on the city or state.
 """
 
 import re
@@ -91,10 +91,10 @@ class AddressBookSystem:
             if key not in self.contacts:
                 self.contacts[key] = contact
                 print("Contact added successfully.")
-                logger_init("UC_7").info(f"Contact added successfully: {key}")
+                logger_init("UC_8").info(f"Contact added successfully: {key}")
             else:
                 print("Contact already exists.")
-                logger_init("UC_7").info(f"Contact already exists: {key}")
+                logger_init("UC_8").info(f"Contact already exists: {key}")
             
         
         
@@ -130,12 +130,13 @@ class AddressBookSystem:
                     Phone_Number=Phone_Number if Phone_Number else None,
                     Email=Email if Email else None
                 )
-                logger_init("UC_7").info(f"Contact edited successfully: {key}")
+                logger_init("UC_8").info(f"Contact edited successfully: {key}")
                 return f"Contact {key} edited successfully."
             else:
-                logger_init("UC_7").info(f"Contact {key} not found.")
+                logger_init("UC_8").info(f"Contact {key} not found.")
                 return f"Contact for {key} not found."
 
+        
         def delete_contact(self, first_name, last_name):
             """
             Description:
@@ -151,10 +152,10 @@ class AddressBookSystem:
             key = f"{first_name} {last_name}"
             if key in self.contacts:
                 del self.contacts[key]
-                logger_init("UC_7").info(f"Contact deleted successfully: {key}")
+                logger_init("UC_8").info(f"Contact deleted successfully: {key}")
                 return f"Contact deleted successfully."
             else:
-                logger_init("UC_7").info(f"Contact {key} not found.")
+                logger_init("UC_8").info(f"Contact {key} not found.")
                 return f"Contact does not exist."
 
         
@@ -192,11 +193,11 @@ class AddressBookSystem:
         """
         if name not in self.address_books:
             self.address_books[name] = self.AddressBook()
-            logger_init("UC_7").info(f"Address Book '{name}' created successfully.")
+            logger_init("UC_8").info(f"Address Book '{name}' created successfully.")
             return f"Address Book '{name}' created successfully."
             
         else:
-            logger_init("UC_7").info(f"Address Book '{name}' already exists.")
+            logger_init("UC_8").info(f"Address Book '{name}' already exists.")
             return f"Address Book '{name}' already exists."
             
 
@@ -218,6 +219,25 @@ class AddressBookSystem:
         else:
             
             return  None
+    def search_city_state(self,city=None,state=None):
+
+        """
+        Description:
+            This function is used to search a person by city or state.
+            
+        Parameters:
+            city:Nonee
+            state:None
+        
+        Returns:
+            result: str"""
+        result="\n SEARCH RESULTS \n"
+        for book_name,address_book in self.address_books.items():
+            for contact in address_book.contacts.values():
+                if (city and contact.City==city) or (state and contact.State==state):
+                    result += f"Address Book: {book_name}\n" + contact.display_Contacts()
+        return result if result != "\nSearch Results:\n" else "No matching contacts found."
+
             
     @staticmethod
     def get_valid_zip_code(zip_code_input):
@@ -290,7 +310,8 @@ def main():
         print("\n------ ADDRESS BOOK SYSTEM MENU -------\n")
         print("1. Create new Address Book")
         print("2. Select Address Book")
-        print("3. Exit")
+        print("3.Search a person by state or city")
+        print("4. Exit")
 
         choice = int(input("Enter your choice: "))
 
@@ -346,8 +367,17 @@ def main():
 
             else:
                 print(f"No Address Book found with the name '{name}'.")
+        elif choice==3:
+            City=input("Enter the city to search ( or press enter to skip)")
+            State=input("Enter the search to search ( or press enter to skip)")
+            if City or State:
+                print(system.search_city_state(City,State))
+                logger_init("UC_8").info("Search found ")
+            else:
+                print("There are no persons on that particular city or state.")
+                logger_init("UC_8").info("Search not found ")
 
-        elif choice == 3:
+        elif choice == 4:
             print("Exiting the Address Book System.")
             break
 
