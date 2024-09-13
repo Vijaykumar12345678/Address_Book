@@ -87,15 +87,12 @@ class AddressBook:
         """
        
         key=f"{contact.First_Name} {contact.Last_Name}"
-        if key not in self.contacts:
-            self.contacts[key]=contact
-            print("Contact Added Successfully")
-            logger_init("UC_4").info(f"Contact Added  Successfully:")
+        
+        self.contacts[key]=contact
+        print("Contact Added Successfully")
+        logger_init("UC_5").info(f"Contact Added  Successfully:")
 
-        else:
-            print("Contact already exists")
-            logger_init("UC_4").info(f"Contact already Exists:")
-    
+        
     
     def edit_contact(self, first_name, last_name):
         
@@ -131,10 +128,10 @@ class AddressBook:
                 Phone_Number=Phone_Number if Phone_Number else None,
                 Email=Email if Email else None
             )
-            logger_init("UC_4").info(f"Contact edited successfully: {key}")
+            logger_init("UC_5").info(f"Contact edited successfully: {key}")
             return f"Contact {key} edited successfully."
         else:
-            logger_init("UC_4").info(f"Contact {key} not found.")
+            logger_init("UC_5").info(f"Contact {key} not found.")
             return f"Contact for {key} not found."
     
     def delete_contact(self,First_Name,Last_Name):
@@ -153,10 +150,10 @@ class AddressBook:
         key=f"{First_Name} {Last_Name}"
         if key in self.contacts:
             del self.contacts[key]
-            logger_init("UC_4").info(f"Contact deleted successfully: {key}")
+            logger_init("UC_5").info(f"Contact deleted successfully: {key}")
             return f"Contact Deleted Succesfully"
         else:
-            logger_init("UC_4").info(f"Contact {key} not found.")
+            logger_init("UC_5").info(f"Contact {key} not found.")
             return f"Not exist"
     
     def get_valid_zip_code(self, zip_code_input):
@@ -240,16 +237,6 @@ class AddressBook:
 
 def main():
     
-    """
-    Description:
-        This function is used to display the welcome message.
-
-    Parameters:
-        None
-    
-    Returns:
-        None
-    """
     print("-----------------------Welcome to Address Book--------------------")
 
     address_book=AddressBook()
