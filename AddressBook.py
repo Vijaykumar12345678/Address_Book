@@ -3,7 +3,7 @@
 @Date: 2024-09-13
 @Last Modified by: Vijay Kumar M N
 @Last Modified: 2024-09-13
-@Title : Python program for to sort the contacts in the address book based on the names.
+@Title : Python program for to sort the contacts in the address book based on the city or state.
 """
 
 import re
@@ -175,6 +175,31 @@ class AddressBookSystem:
                 result += contact.display_Contacts()
                 print("\n")
             return result
+        
+        def sort_by_city_state(self,name):
+            """
+            Description:
+                This function used to sort based on the city or state.
+                
+            Parameters:
+                name: str its city or state
+            
+            returns:
+                 result"""
+            if name=='state':
+                sorted_contacts = sorted(self.contacts.values(), key=lambda x: x.State)
+                result = "\nSorted by State:\n"
+                for contact in sorted_contacts:
+                    result += contact.display_Contacts()
+                    result += "\n"
+                return result
+            else:
+                sorted_contacts = sorted(self.contacts.values(), key=lambda x: x.City)
+                result = "\nSorted by City:\n"
+                for contact in sorted_contacts:
+                    result += contact.display_Contacts()
+                    result += "\n"
+                return result
 
         
         def display_all_contacts(self):
@@ -351,7 +376,8 @@ def main():
                     print("3. Edit Contact")
                     print("4. Delete Contact")
                     print("5. Sort by Name")
-                    print("6. Go Back")
+                    print("6. Sort By City or State")
+                    print("7. Go Back")
 
                     sub_choice = int(input("Enter your choice: "))
                     if sub_choice == 1:
@@ -379,10 +405,16 @@ def main():
                         First_Name = input("Enter the First Name: ")
                         Last_Name = input("Enter the Last Name: ")
                         print(address_book.delete_contact(First_Name, Last_Name))
+                    
                     elif sub_choice==5:
-                        print(address_book.sort_by_name())
+                        result=address_book.sort_by_name()
+                        print(result)
+                    
+                    elif sub_choice==6:
+                        result=input("Enter how to sort based on city or state")
+                        print(address_book.sort_by_city_state(result))
 
-                    elif sub_choice == 6:
+                    elif sub_choice == 7:
                         break
 
                     else:
