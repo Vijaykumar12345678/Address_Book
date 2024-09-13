@@ -3,7 +3,7 @@
 @Date: 2024-09-13
 @Last Modified by: Vijay Kumar M N
 @Last Modified: 2024-09-13
-@Title : Python program for to search a person based on the city or state.
+@Title : Python program for to sort the contacts based on the names.
 """
 
 import re
