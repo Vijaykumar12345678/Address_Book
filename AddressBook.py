@@ -3,7 +3,7 @@
 @Date: 2024-09-12
 @Last Modified by: Vijay Kumar M N
 @Last Modified: 2024-09-12
-@Title : python program for the AddressBook to able to delete the contacts.
+@Title : python program for the AddressBook to able to add the multiple persons.
 """
 from MyLogging import logger_init
 import re
