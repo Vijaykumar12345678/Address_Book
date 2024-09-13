@@ -3,7 +3,7 @@
 @Date: 2024-09-13
 @Last Modified by: Vijay Kumar M N
 @Last Modified: 2024-09-13
-@Title : Python program for managing multiple Address Books, each containing multiple contacts.
+@Title : Python program for managing multiple Address Books no duplicate names.
 """
 
 import re
@@ -88,10 +88,13 @@ class AddressBookSystem:
                 None
             """
             key = f"{contact.First_Name} {contact.Last_Name}"
-            
-            self.contacts[key] = contact
-            print("Contact added successfully.")
-            logger_init("UC_6").info(f"Contact added successfully: {key}")
+            if key not in self.contacts:
+                self.contacts[key] = contact
+                print("Contact added successfully.")
+                logger_init("UC_7").info(f"Contact added successfully: {key}")
+            else:
+                print("Contact already exists.")
+                logger_init("UC_7").info(f"Contact already exists: {key}")
             
         
         
@@ -127,10 +130,10 @@ class AddressBookSystem:
                     Phone_Number=Phone_Number if Phone_Number else None,
                     Email=Email if Email else None
                 )
-                logger_init("UC_6").info(f"Contact edited successfully: {key}")
+                logger_init("UC_7").info(f"Contact edited successfully: {key}")
                 return f"Contact {key} edited successfully."
             else:
-                logger_init("UC_6").info(f"Contact {key} not found.")
+                logger_init("UC_7").info(f"Contact {key} not found.")
                 return f"Contact for {key} not found."
 
         def delete_contact(self, first_name, last_name):
@@ -148,10 +151,10 @@ class AddressBookSystem:
             key = f"{first_name} {last_name}"
             if key in self.contacts:
                 del self.contacts[key]
-                logger_init("UC_6").info(f"Contact deleted successfully: {key}")
+                logger_init("UC_7").info(f"Contact deleted successfully: {key}")
                 return f"Contact deleted successfully."
             else:
-                logger_init("UC_6").info(f"Contact {key} not found.")
+                logger_init("UC_7").info(f"Contact {key} not found.")
                 return f"Contact does not exist."
 
         
@@ -189,11 +192,11 @@ class AddressBookSystem:
         """
         if name not in self.address_books:
             self.address_books[name] = self.AddressBook()
-            logger_init("UC_6").info(f"Address Book '{name}' created successfully.")
+            logger_init("UC_7").info(f"Address Book '{name}' created successfully.")
             return f"Address Book '{name}' created successfully."
             
         else:
-            logger_init("UC_6").info(f"Address Book '{name}' already exists.")
+            logger_init("UC_7").info(f"Address Book '{name}' already exists.")
             return f"Address Book '{name}' already exists."
             
 
