@@ -91,10 +91,10 @@ class AddressBookSystem:
             if key not in self.contacts:
                 self.contacts[key] = contact
                 print("Contact added successfully.")
-                logger_init("UC_10").info(f"Contact added successfully: {key}")
+                logger_init("UC_11").info(f"Contact added successfully: {key}")
             else:
                 print("Contact already exists.")
-                logger_init("UC_10").info(f"Contact already exists: {key}")
+                logger_init("UC_11").info(f"Contact already exists: {key}")
             
         
         
@@ -130,10 +130,10 @@ class AddressBookSystem:
                     Phone_Number=Phone_Number if Phone_Number else None,
                     Email=Email if Email else None
                 )
-                logger_init("UC_10").info(f"Contact edited successfully: {key}")
+                logger_init("UC_11").info(f"Contact edited successfully: {key}")
                 return f"Contact {key} edited successfully."
             else:
-                logger_init("UC_10").info(f"Contact {key} not found.")
+                logger_init("UC_11").info(f"Contact {key} not found.")
                 return f"Contact for {key} not found."
 
         
@@ -152,10 +152,10 @@ class AddressBookSystem:
             key = f"{first_name} {last_name}"
             if key in self.contacts:
                 del self.contacts[key]
-                logger_init("UC_10").info(f"Contact deleted successfully: {key}")
+                logger_init("UC_11").info(f"Contact deleted successfully: {key}")
                 return f"Contact deleted successfully."
             else:
-                logger_init("UC_10").info(f"Contact {key} not found.")
+                logger_init("UC_11").info(f"Contact {key} not found.")
                 return f"Contact does not exist."
         
         
@@ -211,11 +211,11 @@ class AddressBookSystem:
         """
         if name not in self.address_books:
             self.address_books[name] = self.AddressBook()
-            logger_init("UC_10").info(f"Address Book '{name}' created successfully.")
+            logger_init("UC_11").info(f"Address Book '{name}' created successfully.")
             return f"Address Book '{name}' created successfully."
             
         else:
-            logger_init("UC_10").info(f"Address Book '{name}' already exists.")
+            logger_init("UC_11").info(f"Address Book '{name}' already exists.")
             return f"Address Book '{name}' already exists."
             
 
@@ -398,10 +398,10 @@ def main():
                 print(result)
                 print(f"The Number of Persons found is: {count}")
 
-                logger_init("UC_10").info("Search found ")
+                logger_init("UC_11").info("Search found ")
             else:
                 print("There are no persons on that particular city or state.")
-                logger_init("UC_10").info("Search not found ")
+                logger_init("UC_11").info("Search not found ")
 
         elif choice == 4:
             print("Exiting the Address Book System.")
