@@ -5,6 +5,7 @@
 @Last Modified: 2024-09-12
 @Title : python program for the AddressBook to add the contacts.
 """
+import re
 from MyLogging import logger_init
 class contact:
     def __init__(self,First_Name,Last_Name,Address,City,State,Zip_Code,Phone_Number,Email):
@@ -54,14 +55,69 @@ class AddressBook:
         """
        
         key=f"{contact.First_Name} {contact.Last_Name}"
-        if key not in self.contacts:
-            self.contacts[key]=contact
-            print("Contact Added Successfully")
-            logger_init("UC_2").info(f"Contact Added  Successfully:")
+        
+        self.contacts[key]=contact
+        print("Contact Added Successfully")
+        logger_init("UC_2").info(f"Contact Added  Successfully:")
 
-        else:
-            print("Contact already exists")
-            logger_init("UC_2").info(f"Contact already Exists:")
+    def get_valid_zip_code(self, zip_code_input):
+        
+        """
+        Description:
+            This function ensures that the entered Zip Code is valid (6 digits).
+        
+        Parameters:
+            zip_code_input: str The input Zip Code.
+        
+        Returns:
+            str: A valid 6-digit Zip Code.
+        """
+        
+        attempts=1
+        while not re.match(r"^\d{6}$", zip_code_input) and attempts<=3:
+            print("Invalid Zip Code. Please enter a 6-digit number.")
+            zip_code_input = input("Enter a valid Zip Code: ")
+            attempts+=1
+        return zip_code_input
+    
+    def get_valid_Email(self, Email_input):
+    
+        """
+        Description:
+            This function ensures that the entered Email is valid.
+        
+        Parameters:
+            Email_input: str The input Email.
+        
+        Returns:
+            str: A valid Email.
+        """
+        attempts=1
+        while not re.match(r"^[\w]+([._+#$%^&*-][\w]+)*@[\w]+\.[a-zA-Z]{2,3}(\.[a-zA-Z]{2,3})?$", Email_input) and attempts<=3:
+            print("Invalid Email. Please enter a valid mail (ex:vijaykumar@gmail.com).")
+            Email_input = input("Enter a valid Email: ")
+            attempts+=1
+        return Email_input 
+
+    def get_valid_Phone_Number(self, Phone_Number_input):
+        """
+        Description:
+            This function ensures that the entered valid phone number.
+        
+        Parameters:
+            Phone_Number_input: str The input phone number.
+        
+        Returns:
+            str: A valid 10 digits phone number.
+        """
+        attempts=1
+        while not re.match(r"\d{10}", Phone_Number_input) and attempts<=3:
+            print("Invalid Email. Please enter a valid phone number (eg:8861912898).")
+            Phone_Number_input = input("Enter a valid Phone Number: ")
+            attempts+=1
+        return Phone_Number_input    
+    
+    
     
     def display_all_contacts(self):
 
@@ -112,9 +168,9 @@ def main():
             Address=input("Enter the Address:")
             City=input("Enter the City:")
             State=input("Enter the State:")
-            Zip_Code=input("Enter the Zip Code:")
-            Phone_Number=int(input("Enter the Phone Number:"))
-            Email=input("Enter the Email:")
+            Zip_Code=address_book.get_valid_zip_code(input("Enter the Zip Code:"))
+            Phone_Number=address_book.get_valid_Phone_Number((input("Enter the Phone Number:")))
+            Email=address_book.get_valid_Email(input("Enter the Email:"))
     
             contacts=contact(
                 First_Name=First_Name,
