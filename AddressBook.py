@@ -157,6 +157,24 @@ class AddressBookSystem:
             else:
                 logger_init("UC_10").info(f"Contact {key} not found.")
                 return f"Contact does not exist."
+        
+        
+        def sort_by_name(self):
+            """
+            Description:
+                This function is used to sort the names 
+            
+            Parameters:
+                None
+            
+            Returns:
+                result """
+            sorted_contacts = sorted(self.contacts.values(), key=lambda x: (x.First_Name, x.Last_Name))
+            result = "\nSorted Contacts:\n"
+            for contact in sorted_contacts:
+                result += contact.display_Contacts()
+                print("\n")
+            return result
 
         
         def display_all_contacts(self):
@@ -332,7 +350,8 @@ def main():
                     print("2. Display Contacts")
                     print("3. Edit Contact")
                     print("4. Delete Contact")
-                    print("5. Go Back")
+                    print("5. Sort by Name")
+                    print("6. Go Back")
 
                     sub_choice = int(input("Enter your choice: "))
                     if sub_choice == 1:
@@ -360,8 +379,10 @@ def main():
                         First_Name = input("Enter the First Name: ")
                         Last_Name = input("Enter the Last Name: ")
                         print(address_book.delete_contact(First_Name, Last_Name))
+                    elif sub_choice==5:
+                        print(address_book.sort_by_name())
 
-                    elif sub_choice == 5:
+                    elif sub_choice == 6:
                         break
 
                     else:
