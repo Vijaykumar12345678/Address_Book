@@ -353,6 +353,15 @@ class AddressBookSystem:
         return result if result != "\nSearch Results:\n" else "No matching contacts found.",count
 
     def save_to_file(self, filename):
+        """
+        Description:
+            This function will save the address book into a file
+        
+        Parameters:
+            Filename: str
+        
+        Returns:
+            None"""
         with open(filename, 'w') as file:
             for name, book in self.address_books.items():
                 file.write(f"AddressBook:{name}\n")
@@ -360,7 +369,19 @@ class AddressBookSystem:
                 file.write("\n")
         logger_init("UC_14").info(f"Address Book is saved sucessfully to a file.")
 
+    
     def load_from_file(self, filename):
+        """
+        Description:
+            This function is used to load file
+        
+        Parameters:
+            Filename: str
+        
+        
+        Returns:
+            None
+        """
         try:
             with open(filename, 'r') as f:
                 current_book = None
