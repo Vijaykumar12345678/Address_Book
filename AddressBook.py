@@ -349,6 +349,7 @@ class AddressBookSystem:
                 if (city and contact.City==city) or (state and contact.State==state):
                     result += f"Address Book: {book_name}\n" + contact.display_Contacts()
                     count+=1
+        logger_init("UC_13").info(f"Contacts will be searched based on the city or state sucessfully .")
         return result if result != "\nSearch Results:\n" else "No matching contacts found.",count
 
     def save_to_file(self, filename):
@@ -357,6 +358,7 @@ class AddressBookSystem:
                 file.write(f"AddressBook:{name}\n")
                 file.write(book.to_string())
                 file.write("\n")
+        logger_init("UC_13").info(f"Address Book is saved sucessfully to a file.")
 
     def load_from_file(self, filename):
         try:
@@ -371,6 +373,7 @@ class AddressBookSystem:
                     elif line and current_book:
                         contact_obj = contact.from_string(line)
                         current_book.add_contact(contact_obj)
+            logger_init("UC_13").info(f"Address Book is loaded successfully from a file ")
             print(f"Address books loaded from {filename} successfully.")
         except Exception as e:
             print(f"Error loading address books: {e}")
