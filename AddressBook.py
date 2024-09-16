@@ -7,6 +7,7 @@
 """
 
 import re
+import json
 from MyLogging import logger_init
 
 class contact:
@@ -65,33 +66,43 @@ class contact:
             self.Phone_Number = Phone_Number
         if Email:
             self.Email = Email
-    def to_string(self):
+    
+    def to_dict(self):
         """
         Description:
-            This function is used to convert to string format
+            Converts the contact object to a dictionary format for saving in JSON.
         
         Parameters:
             None
         
         Returns:
-            str: contancts"""
-        return f"{self.First_Name},{self.Last_Name},{self.Address},{self.City},{self.State},{self.Zip_Code},{self.Phone_Number},{self.Email}\n"
+            dict: A dictionary representation of the contact.
+        """
+        return {
+            "First_Name": self.First_Name,
+            "Last_Name": self.Last_Name,
+            "Address": self.Address,
+            "City": self.City,
+            "State": self.State,
+            "Zip_Code": self.Zip_Code,
+            "Phone_Number": self.Phone_Number,
+            "Email": self.Email
+        }
 
     @staticmethod
-    def from_string(data):
+    def from_dict(data):
         """
         Description:
-            Creates a Contact object from a comma-separated string.
-
+            Creates a Contact object from a dictionary.
+        
         Parameters:
-            data : str A string containing contact details separated by commas. 
-                    Expected order is name, phone number, email, city, and state.
-
+            data : dict A dictionary containing contact details. 
+        
         Returns:
-            Contact: An instance of the Contact class created from the provided data.
+            contact: An instance of the contact class created from the provided data.
         """
-        fields = data.strip().split(',')
-        return contact(*fields)
+        return contact(data["First_Name"], data["Last_Name"], data["Address"], data["City"],
+                       data["State"], data["Zip_Code"], data["Phone_Number"], data["Email"])
 
 
 class AddressBookSystem:
@@ -121,10 +132,10 @@ class AddressBookSystem:
             if key not in self.contacts:
                 self.contacts[key] = contact
                 print("Contact added successfully.")
-                logger_init("UC_13").info(f"Contact added successfully: {key}")
+                logger_init("UC_15").info(f"Contact added successfully: {key}")
             else:
                 print("Contact already exists.")
-                logger_init("UC_13").info(f"Contact already exists: {key}")
+                logger_init("UC_15").info(f"Contact already exists: {key}")
             
         
         
@@ -160,10 +171,10 @@ class AddressBookSystem:
                     Phone_Number=Phone_Number if Phone_Number else None,
                     Email=Email if Email else None
                 )
-                logger_init("UC_13").info(f"Contact edited successfully: {key}")
+                logger_init("UC_15").info(f"Contact edited successfully: {key}")
                 return f"Contact {key} edited successfully."
             else:
-                logger_init("UC_13").info(f"Contact {key} not found.")
+                logger_init("UC_15").info(f"Contact {key} not found.")
                 return f"Contact for {key} not found."
 
         
@@ -182,10 +193,10 @@ class AddressBookSystem:
             key = f"{first_name} {last_name}"
             if key in self.contacts:
                 del self.contacts[key]
-                logger_init("UC_13").info(f"Contact deleted successfully: {key}")
+                logger_init("UC_15").info(f"Contact deleted successfully: {key}")
                 return f"Contact deleted successfully."
             else:
-                logger_init("UC_13").info(f"Contact {key} not found.")
+                logger_init("UC_15").info(f"Contact {key} not found.")
                 return f"Contact does not exist."
         
         
@@ -204,7 +215,7 @@ class AddressBookSystem:
             for contact in sorted_contacts:
                 result += contact.display_Contacts()
                 print("\n")
-            logger_init("UC_13").info(f"contacts sorted sucessfully by names")
+            logger_init("UC_15").info(f"contacts sorted sucessfully by names")
             return result
         
         def sort_by_city_state(self,name):
@@ -223,7 +234,7 @@ class AddressBookSystem:
                 for contact in sorted_contacts:
                     result += contact.display_Contacts()
                     result += "\n"
-                logger_init("UC_13").info(f"Contacts sorted sucessfully by state name")
+                logger_init("UC_15").info(f"Contacts sorted sucessfully by state name")
                 return result
             else:
                 sorted_contacts = sorted(self.contacts.values(), key=lambda x: x.City)
@@ -231,39 +242,37 @@ class AddressBookSystem:
                 for contact in sorted_contacts:
                     result += contact.display_Contacts()
                     result += "\n"
-                logger_init("UC_13").info(f"Contacts sorted sucessfully by city name")
+                logger_init("UC_15").info(f"Contacts sorted sucessfully by city name")
                 return result
-        def to_string(self):
+        def to_dict(self):
             """
             Description:
-                Converts all the contacts in the address book into a single string format.
-
+                Converts the AddressBook object to a dictionary format.
+        
             Parameters:
                 None
-
+        
             Returns:
-                str: A string containing the contact details of all contacts in the address book.
+                dict: A dictionary representation of the AddressBook object.
             """
-            return ''.join(contact.to_string() for contact in self.contacts.values())
+            return {key: contact.to_dict() for key, contact in self.contacts.items()}
 
         @staticmethod
-        def from_string(data):
+        def from_dict(data):
             """
             Description:
-                This method creates an AddressBook object from a given string, where each line represents a contact's data.
-
+                This method creates an AddressBook object from a dictionary.
+        
             Parameters:
-                data: str A string containing serialized contact information.
-
+                data: dict A dictionary containing serialized contact information.
+        
             Returns:
-                AddressBook: An AddressBook object populated with contacts parsed from the input string.
-    """
+                AddressBook: An AddressBook object populated with contacts parsed from the input dictionary.
+            """
             address_book = AddressBookSystem.AddressBook()
-            lines = data.strip().split('\n')
-            for line in lines:
-                if line:
-                    contact_obj = contact.from_string(line)
-                    address_book.contacts[f"{contact_obj.First_Name} {contact_obj.Last_Name}"] = contact_obj
+            for key, contact_data in data.items():
+                contact_obj = contact.from_dict(contact_data)
+                address_book.contacts[key] = contact_obj
             return address_book
 
         def display_all_contacts(self):
@@ -304,11 +313,11 @@ class AddressBookSystem:
         """
         if name not in self.address_books:
             self.address_books[name] = self.AddressBook()
-            logger_init("UC_13").info(f"Address Book '{name}' created successfully.")
+            logger_init("UC_15").info(f"Address Book '{name}' created successfully.")
             return f"Address Book '{name}' created successfully."
             
         else:
-            logger_init("UC_13").info(f"Address Book '{name}' already exists.")
+            logger_init("UC_15").info(f"Address Book '{name}' already exists.")
             return f"Address Book '{name}' already exists."
             
 
@@ -349,31 +358,32 @@ class AddressBookSystem:
                 if (city and contact.City==city) or (state and contact.State==state):
                     result += f"Address Book: {book_name}\n" + contact.display_Contacts()
                     count+=1
-        logger_init("UC_13").info(f"Contacts will be searched based on the city or state sucessfully .")
+        logger_init("UC_15").info(f"Contacts will be searched based on the city or state sucessfully .")
         return result if result != "\nSearch Results:\n" else "No matching contacts found.",count
 
     def save_to_file(self, filename):
+        """
+        Description:
+            Saves all the address books to a JSON file.
+        
+        Parameters:
+            filename: str The name of the file to save the address books to.
+        
+        Returns:
+            None
+        """
         with open(filename, 'w') as file:
-            for name, book in self.address_books.items():
-                file.write(f"AddressBook:{name}\n")
-                file.write(book.to_string())
-                file.write("\n")
-        logger_init("UC_13").info(f"Address Book is saved sucessfully to a file.")
+            data = {name: book.to_dict() for name, book in self.address_books.items()}
+            json.dump(data, file, indent=4)
+        print(f"Address books saved to {filename} successfully.")
 
     def load_from_file(self, filename):
         try:
-            with open(filename, 'r') as f:
-                current_book = None
-                for line in f:
-                    line = line.strip()
-                    if line.startswith("AddressBook:"):
-                        book_name = line.split(":")[1].strip()
-                        current_book = self.AddressBook()
-                        self.address_books[book_name] = current_book
-                    elif line and current_book:
-                        contact_obj = contact.from_string(line)
-                        current_book.add_contact(contact_obj)
-            logger_init("UC_13").info(f"Address Book is loaded successfully from a file ")
+            with open(filename, 'r') as file:
+                data = json.load(file)
+                for name, address_book_data in data.items():
+                    address_book = self.AddressBook.from_dict(address_book_data)
+                    self.address_books[name] = address_book
             print(f"Address books loaded from {filename} successfully.")
         except Exception as e:
             print(f"Error loading address books: {e}")
@@ -451,8 +461,8 @@ def main():
         print("1. Create new Address Book")
         print("2. Select Address Book")
         print("3.Search a person by state or city")
-        print("4. Save Address Book to file ")
-        print("5. Load Address Book from file")
+        print("4. Save Address Book to json file ")
+        print("5. Load Address Book from json file")
         print("6. Exit")
 
         choice = int(input("Enter your choice: "))
@@ -530,10 +540,10 @@ def main():
                 print(result)
                 print(f"The Number of Persons found is: {count}")
 
-                logger_init("UC_13").info("Search found ")
+                logger_init("UC_15").info("Search found ")
             else:
                 print("There are no persons on that particular city or state.")
-                logger_init("UC_13").info("Search not found ")
+                logger_init("UC_15").info("Search not found ")
         
         elif choice==4:
                 name = input("Enter the Address Book name: ")
