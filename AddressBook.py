@@ -375,18 +375,32 @@ class AddressBookSystem:
         with open(filename, 'w') as file:
             data = {name: book.to_dict() for name, book in self.address_books.items()}
             json.dump(data, file, indent=4)
+        logger_init("UC_15").info(f"Address Book Has been saved sucsessfully.")
         print(f"Address books saved to {filename} successfully.")
 
     def load_from_file(self, filename):
+        """
+        Description:
+            Loads address books from a JSON file.
+        
+        Parameters:
+            filename: str The name of the file to load address books from.
+        
+        Returns:
+            None
+        """
+        
         try:
             with open(filename, 'r') as file:
                 data = json.load(file)
                 for name, address_book_data in data.items():
                     address_book = self.AddressBook.from_dict(address_book_data)
                     self.address_books[name] = address_book
+            logger_init("UC_15").info(f"Address Book Has been loaded sucsessfully.")
             print(f"Address books loaded from {filename} successfully.")
         except Exception as e:
             print(f"Error loading address books: {e}")
+            logger_init("UC_15").info(f"Error in loading the address book.")
 
     
     @staticmethod
