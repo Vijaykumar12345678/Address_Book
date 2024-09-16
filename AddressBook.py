@@ -1,9 +1,9 @@
 """
 @Author:Vijay Kumar M N
-@Date: 2024-09-13
+@Date: 2024-09-16
 @Last Modified by: Vijay Kumar M N
-@Last Modified: 2024-09-13
-@Title : Python program for to sort the contacts in the address book based on the city or state.
+@Last Modified: 2024-09-16
+@Title : Python program for to Ability to Read or Write the Address Book with Persons Contact into a File using File IO.
 """
 
 import re
@@ -65,14 +65,44 @@ class contact:
             self.Phone_Number = Phone_Number
         if Email:
             self.Email = Email
+    def to_string(self):
+        """
+        Description:
+            This function is used to convert to string format
+        
+        Parameters:
+            None
+        
+        Returns:
+            str: contancts"""
+        return f"{self.First_Name},{self.Last_Name},{self.Address},{self.City},{self.State},{self.Zip_Code},{self.Phone_Number},{self.Email}\n"
+
+    @staticmethod
+    def from_string(data):
+        """
+        Description:
+            Creates a Contact object from a comma-separated string.
+
+        Parameters:
+            data : str A string containing contact details separated by commas. 
+                    Expected order is name, phone number, email, city, and state.
+
+        Returns:
+            Contact: An instance of the Contact class created from the provided data.
+        """
+        fields = data.strip().split(',')
+        return contact(*fields)
+
 
 class AddressBookSystem:
     def __init__(self):
         self.address_books = {}
-
+    
     class AddressBook:
         def __init__(self):
             self.contacts = {}
+
+        
 
         def add_contact(self, contact):
            
@@ -91,10 +121,10 @@ class AddressBookSystem:
             if key not in self.contacts:
                 self.contacts[key] = contact
                 print("Contact added successfully.")
-                logger_init("UC_11").info(f"Contact added successfully: {key}")
+                logger_init("UC_13").info(f"Contact added successfully: {key}")
             else:
                 print("Contact already exists.")
-                logger_init("UC_11").info(f"Contact already exists: {key}")
+                logger_init("UC_13").info(f"Contact already exists: {key}")
             
         
         
@@ -130,10 +160,10 @@ class AddressBookSystem:
                     Phone_Number=Phone_Number if Phone_Number else None,
                     Email=Email if Email else None
                 )
-                logger_init("UC_11").info(f"Contact edited successfully: {key}")
+                logger_init("UC_13").info(f"Contact edited successfully: {key}")
                 return f"Contact {key} edited successfully."
             else:
-                logger_init("UC_11").info(f"Contact {key} not found.")
+                logger_init("UC_13").info(f"Contact {key} not found.")
                 return f"Contact for {key} not found."
 
         
@@ -152,10 +182,10 @@ class AddressBookSystem:
             key = f"{first_name} {last_name}"
             if key in self.contacts:
                 del self.contacts[key]
-                logger_init("UC_11").info(f"Contact deleted successfully: {key}")
+                logger_init("UC_13").info(f"Contact deleted successfully: {key}")
                 return f"Contact deleted successfully."
             else:
-                logger_init("UC_11").info(f"Contact {key} not found.")
+                logger_init("UC_13").info(f"Contact {key} not found.")
                 return f"Contact does not exist."
         
         
@@ -174,6 +204,7 @@ class AddressBookSystem:
             for contact in sorted_contacts:
                 result += contact.display_Contacts()
                 print("\n")
+            logger_init("UC_13").info(f"contacts sorted sucessfully by names")
             return result
         
         def sort_by_city_state(self,name):
@@ -192,6 +223,7 @@ class AddressBookSystem:
                 for contact in sorted_contacts:
                     result += contact.display_Contacts()
                     result += "\n"
+                logger_init("UC_13").info(f"Contacts sorted sucessfully by state name")
                 return result
             else:
                 sorted_contacts = sorted(self.contacts.values(), key=lambda x: x.City)
@@ -199,9 +231,41 @@ class AddressBookSystem:
                 for contact in sorted_contacts:
                     result += contact.display_Contacts()
                     result += "\n"
+                logger_init("UC_13").info(f"Contacts sorted sucessfully by city name")
                 return result
+        def to_string(self):
+            """
+            Description:
+                Converts all the contacts in the address book into a single string format.
 
-        
+            Parameters:
+                None
+
+            Returns:
+                str: A string containing the contact details of all contacts in the address book.
+            """
+            return ''.join(contact.to_string() for contact in self.contacts.values())
+
+        @staticmethod
+        def from_string(data):
+            """
+            Description:
+                This method creates an AddressBook object from a given string, where each line represents a contact's data.
+
+            Parameters:
+                data: str A string containing serialized contact information.
+
+            Returns:
+                AddressBook: An AddressBook object populated with contacts parsed from the input string.
+    """
+            address_book = AddressBookSystem.AddressBook()
+            lines = data.strip().split('\n')
+            for line in lines:
+                if line:
+                    contact_obj = contact.from_string(line)
+                    address_book.contacts[f"{contact_obj.First_Name} {contact_obj.Last_Name}"] = contact_obj
+            return address_book
+
         def display_all_contacts(self):
             
             """
@@ -220,7 +284,11 @@ class AddressBookSystem:
                 result = "\n All Contacts:\n"
                 for contact in self.contacts.values():
                     result += contact.display_Contacts()
+                
                 return result
+
+        
+        
 
     def create_address_book(self, name):
         """
@@ -236,11 +304,11 @@ class AddressBookSystem:
         """
         if name not in self.address_books:
             self.address_books[name] = self.AddressBook()
-            logger_init("UC_11").info(f"Address Book '{name}' created successfully.")
+            logger_init("UC_13").info(f"Address Book '{name}' created successfully.")
             return f"Address Book '{name}' created successfully."
             
         else:
-            logger_init("UC_11").info(f"Address Book '{name}' already exists.")
+            logger_init("UC_13").info(f"Address Book '{name}' already exists.")
             return f"Address Book '{name}' already exists."
             
 
@@ -283,7 +351,31 @@ class AddressBookSystem:
                     count+=1
         return result if result != "\nSearch Results:\n" else "No matching contacts found.",count
 
-            
+    def save_to_file(self, filename):
+        with open(filename, 'w') as file:
+            for name, book in self.address_books.items():
+                file.write(f"AddressBook:{name}\n")
+                file.write(book.to_string())
+                file.write("\n")
+
+    def load_from_file(self, filename):
+        try:
+            with open(filename, 'r') as f:
+                current_book = None
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("AddressBook:"):
+                        book_name = line.split(":")[1].strip()
+                        current_book = self.AddressBook()
+                        self.address_books[book_name] = current_book
+                    elif line and current_book:
+                        contact_obj = contact.from_string(line)
+                        current_book.add_contact(contact_obj)
+            print(f"Address books loaded from {filename} successfully.")
+        except Exception as e:
+            print(f"Error loading address books: {e}")
+
+    
     @staticmethod
     def get_valid_zip_code(zip_code_input):
         """
@@ -356,7 +448,9 @@ def main():
         print("1. Create new Address Book")
         print("2. Select Address Book")
         print("3.Search a person by state or city")
-        print("4. Exit")
+        print("4. Save Address Book to file ")
+        print("5. Load Address Book from file")
+        print("6. Exit")
 
         choice = int(input("Enter your choice: "))
 
@@ -386,9 +480,9 @@ def main():
                         Address = input("Enter the Address: ")
                         City = input("Enter the City: ")
                         State = input("Enter the State: ")
-                        Zip_Code = AddressBookSystem.get_valid_zip_code(input("Enter the Zip Code: "))
-                        Phone_Number = AddressBookSystem.get_valid_phone_number(input("Enter the Phone Number: "))
-                        Email = AddressBookSystem.get_valid_email(input("Enter the Email: "))
+                        Zip_Code = system.get_valid_zip_code(input("Enter the Zip Code: "))
+                        Phone_Number = system.get_valid_phone_number(input("Enter the Phone Number: "))
+                        Email = system.get_valid_email(input("Enter the Email: "))
 
                         contact_obj = contact(First_Name, Last_Name, Address, City, State, Zip_Code, Phone_Number, Email)
                         address_book.add_contact(contact_obj)
@@ -414,6 +508,9 @@ def main():
                         result=input("Enter how to sort based on city or state")
                         print(address_book.sort_by_city_state(result))
 
+                    
+                    
+                    
                     elif sub_choice == 7:
                         break
 
@@ -430,12 +527,23 @@ def main():
                 print(result)
                 print(f"The Number of Persons found is: {count}")
 
-                logger_init("UC_11").info("Search found ")
+                logger_init("UC_13").info("Search found ")
             else:
                 print("There are no persons on that particular city or state.")
-                logger_init("UC_11").info("Search not found ")
+                logger_init("UC_13").info("Search not found ")
+        
+        elif choice==4:
+                name = input("Enter the Address Book name: ")
+                address_book = system.get_address_book(name)
+                if address_book:
+                    filename = input("Enter filename to save: ")
+                    system.save_to_file(filename)
+        elif choice==5:
+            filename = input("Enter filename to load: ")
+            system.load_from_file(filename)
+            print("Loaded Address Books:", list(system.address_books.keys()))
 
-        elif choice == 4:
+        elif choice == 6:
             print("Exiting the Address Book System.")
             break
 
